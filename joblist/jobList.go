@@ -4,7 +4,9 @@ import (
 	"strconv"
 	"database/sql"
 	"log"
-	"job_api/jobInfo"
+	"job_api/util"
+	_ "github.com/lib/pq"
+
 )
 
 type JobList struct {
@@ -37,11 +39,11 @@ func QueryJobList(city string, key string, limit string) [10]JobList {
 	db, err := sql.Open("postgres",
 		"postgres://postgres:123456@10.16.6.94:5432/mutual_relation?sslmode=disable")
 
-	jobInfo.CheckErr(err)
+	util.CheckErr(err)
 
 	//查询数据
 	rows, err := db.Query(querySQl)
-	jobInfo.CheckErr(err)
+	util.CheckErr(err)
 	jobList := JobList{}
 
 	listArray := [10]JobList{}
@@ -49,7 +51,7 @@ func QueryJobList(city string, key string, limit string) [10]JobList {
 	for rows.Next() {
 
 		err = rows.Scan(&jobList.Id, &jobList.City, &jobList.Date, &jobList.Title, &jobList.JobType)
-		jobInfo.CheckErr(err)
+		util.CheckErr(err)
 		listArray[i] = jobList
 		i += 1
 	}
